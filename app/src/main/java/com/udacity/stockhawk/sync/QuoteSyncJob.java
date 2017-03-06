@@ -38,6 +38,7 @@ public final class QuoteSyncJob {
     private static final int YEARS_OF_HISTORY = 2;
 
     private QuoteSyncJob() {
+
     }
 
     static void getQuotes(Context context) {
@@ -55,8 +56,6 @@ public final class QuoteSyncJob {
             stockCopy.addAll(stockPref);
             String[] stockArray = stockPref.toArray(new String[stockPref.size()]);
 
-            Timber.d(stockCopy.toString());
-
             if (stockArray.length == 0) {
                 return;
             }
@@ -69,10 +68,21 @@ public final class QuoteSyncJob {
             ArrayList<ContentValues> quoteCVs = new ArrayList<>();
 
             while (iterator.hasNext()) {
+
                 String symbol = iterator.next();
 
-
                 Stock stock = quotes.get(symbol);
+
+                // TODO Notify the user that the symbol they inputted is not valid
+                // If the stock doesn't exist on Yahoo's end
+                if (stock.getName() == null) {
+
+                    // Remove the stock
+                    PrefUtils.removeStock(context, symbol);
+                    continue;
+
+                }
+
                 StockQuote quote = stock.getQuote();
 
                 float price = quote.getPrice().floatValue();
@@ -92,12 +102,13 @@ public final class QuoteSyncJob {
                     historyBuilder.append("\n");
                 }
 
+                Timber.d(historyBuilder.toString());
+
                 ContentValues quoteCV = new ContentValues();
                 quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);
                 quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
                 quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
                 quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
-
 
                 quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
 
@@ -148,25 +159,24 @@ public final class QuoteSyncJob {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
         if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
+
             Intent nowIntent = new Intent(context, QuoteIntentService.class);
             context.startService(nowIntent);
+
         } else {
 
             JobInfo.Builder builder = new JobInfo.Builder(ONE_OFF_ID, new ComponentName(context, QuoteJobService.class));
 
-
             builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                     .setBackoffCriteria(INITIAL_BACKOFF, JobInfo.BACKOFF_POLICY_EXPONENTIAL);
-
 
             JobScheduler scheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
 
             scheduler.schedule(builder.build());
 
-
         }
     }
-
 
 }
