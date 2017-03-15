@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -24,6 +25,7 @@ import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
+import com.udacity.stockhawk.utils.StockUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         Timber.d("Symbol clicked: %s", symbol);
 
-        Class destination = DetailActivity.class;
+        Class destination = StockDetailActivity.class;
         Intent intent = new Intent(this, destination);
 
         intent.putExtra(getString(R.string.intent_extra_symbol_key), symbol);
@@ -135,9 +137,63 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
 
-            PrefUtils.addStock(this, symbol);
-            QuoteSyncJob.syncImmediately(this);
+            new ValidStockTask(this).execute(symbol);
+
+
         }
+    }
+
+    /**
+     * Check if the user inputted stock is valid
+     */
+    class ValidStockTask extends AsyncTask<String, Void, Integer> {
+
+        private Context context;
+        private String symbol;
+
+        ValidStockTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+
+            if (strings.length == 0 || strings[0] == null) return null;
+
+            this.symbol = strings[0];
+
+            return StockUtils.validStockSymbol(context, symbol);
+
+        }
+
+        @Override
+        protected void onPostExecute(Integer status) {
+
+            if (status == null) return;
+
+            String resultMessage = null;
+
+            if (status == StockUtils.STATUS_OK) {
+
+                resultMessage = getString(R.string.dialog_result_success);
+                PrefUtils.addStock(context, symbol);
+                QuoteSyncJob.syncImmediately(context);
+
+            } else if (status == StockUtils.STATUS_DUPLICATE_EXISTS) {
+
+                resultMessage = getString(R.string.dialog_result_duplicate_exists);
+
+            } else if (status == StockUtils.STATUS_STOCK_DOES_NOT_EXIST) {
+
+                resultMessage = getString(R.string.dialog_result_not_found);
+
+            }
+
+            swipeRefreshLayout.setRefreshing(false);
+            AddResultDialog.newInstance(resultMessage).show(getFragmentManager(), "ResultDialogFragment");
+
+        }
+
     }
 
     @Override
@@ -155,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         if (data.getCount() != 0) {
             error.setVisibility(View.GONE);
         }
+
         adapter.setCursor(data);
     }
 

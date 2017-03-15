@@ -5,7 +5,6 @@
 
     <string name="pref_stocks_key">stocks</string>
 
-
     <string name="pref_display_mode_key">displayMode</string>
     <string name="pref_display_mode_default">@string/pref_display_mode_percentage_key</string>
 
@@ -34,5 +33,12 @@
 
     <!--My Strings-->
     <string name="intent_extra_symbol_key" translatable="false">symbol_key</string>
+
+    <string name="add_result_message_bundle_key" translatable="false">result_message_key</string>
+
+    <string name="dialog_result_success">Stock successfully added</string>
+    <string name="dialog_result_duplicate_exists">Stock already exists</string>
+    <string name="dialog_result_not_found">Symbol not found</string>
+
 
 </resources>

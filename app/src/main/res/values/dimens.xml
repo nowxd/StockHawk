@@ -1,4 +1,11 @@
 <resources>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="line_chart_width">400dp</dimen>
+    <dimen name="line_chart_height">300dp</dimen>
+
+    <dimen name="large_text_size">32sp</dimen>
+    <dimen name="detail_vertical_padding">16dp</dimen>
+
 </resources>

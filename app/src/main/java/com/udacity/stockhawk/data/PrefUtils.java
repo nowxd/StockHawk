@@ -87,4 +87,13 @@ public final class PrefUtils {
         editor.apply();
     }
 
+    /**
+     * Check if the Stock exists
+     */
+    public static boolean checkStockExistsPref(Context context, String symbol) {
+        Set<String> stockSet = getStocks(context);
+        return stockSet.contains(symbol.toUpperCase());
+    }
+
+
 }

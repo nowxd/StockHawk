@@ -22,9 +22,6 @@ public class DatabaseUtils {
                 return false;
             }
 
-
-
-
         } catch(IOException e) {
             e.printStackTrace();
         }
