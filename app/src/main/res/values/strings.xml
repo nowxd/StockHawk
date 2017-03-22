@@ -37,7 +37,7 @@
     <string name="add_result_message_bundle_key" translatable="false">result_message_key</string>
 
     <string name="dialog_result_success">Stock successfully added</string>
-    <string name="dialog_result_duplicate_exists">Stock already exists</string>
+    <string name="dialog_result_duplicate_exists">Stock already added</string>
     <string name="dialog_result_not_found">Symbol not found</string>
 
 

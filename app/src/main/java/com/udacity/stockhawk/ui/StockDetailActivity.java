@@ -2,7 +2,6 @@ package com.udacity.stockhawk.ui;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -12,14 +11,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
-import com.udacity.stockhawk.utils.DataUtils;
-
-import java.util.List;
+import com.udacity.stockhawk.utils.ChartUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,30 +78,7 @@ public class StockDetailActivity extends AppCompatActivity implements LoaderMana
     }
 
     private void setupChart(String historyString) {
-
-        List<Entry> entries = DataUtils.parseHistoryData(historyString);
-
-        LineDataSet dataSet = new LineDataSet(entries, "Stock Price");
-        dataSet.setValueTextColor(Color.WHITE);
-
-        LineData lineData = new LineData(dataSet);
-        stockChart.setData(lineData);
-
-        // Stock Chart styling
-        stockChart.setBorderColor(Color.WHITE);
-
-        // Axis
-        stockChart.getXAxis().setTextColor(Color.WHITE);
-        stockChart.getAxisLeft().setTextColor(Color.WHITE);
-        stockChart.getAxisRight().setTextColor(Color.WHITE);
-
-        // Legend
-        stockChart.getLegend().setTextColor(Color.WHITE);
-
-        // Description
-        stockChart.getDescription().setText("Stock History");
-        stockChart.getDescription().setTextColor(Color.WHITE);
-
+        ChartUtils.setUpStockChart(stockChart, historyString);
     }
 
 }

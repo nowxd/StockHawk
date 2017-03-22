@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onClick(String symbol) {
 
-        Timber.d("Symbol clicked: %s", symbol);
-
         Class destination = StockDetailActivity.class;
         Intent intent = new Intent(this, destination);
 
@@ -139,61 +137,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             new ValidStockTask(this).execute(symbol);
 
-
         }
-    }
-
-    /**
-     * Check if the user inputted stock is valid
-     */
-    class ValidStockTask extends AsyncTask<String, Void, Integer> {
-
-        private Context context;
-        private String symbol;
-
-        ValidStockTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected Integer doInBackground(String... strings) {
-
-            if (strings.length == 0 || strings[0] == null) return null;
-
-            this.symbol = strings[0];
-
-            return StockUtils.validStockSymbol(context, symbol);
-
-        }
-
-        @Override
-        protected void onPostExecute(Integer status) {
-
-            if (status == null) return;
-
-            String resultMessage = null;
-
-            if (status == StockUtils.STATUS_OK) {
-
-                resultMessage = getString(R.string.dialog_result_success);
-                PrefUtils.addStock(context, symbol);
-                QuoteSyncJob.syncImmediately(context);
-
-            } else if (status == StockUtils.STATUS_DUPLICATE_EXISTS) {
-
-                resultMessage = getString(R.string.dialog_result_duplicate_exists);
-
-            } else if (status == StockUtils.STATUS_STOCK_DOES_NOT_EXIST) {
-
-                resultMessage = getString(R.string.dialog_result_not_found);
-
-            }
-
-            swipeRefreshLayout.setRefreshing(false);
-            AddResultDialog.newInstance(resultMessage).show(getFragmentManager(), "ResultDialogFragment");
-
-        }
-
     }
 
     @Override
@@ -251,6 +195,59 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Check if the user inputted stock is valid
+     */
+    class ValidStockTask extends AsyncTask<String, Void, Integer> {
+
+        private Context context;
+        private String symbol;
+
+        ValidStockTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+
+            if (strings.length == 0 || strings[0] == null) return null;
+
+            this.symbol = strings[0];
+
+            return StockUtils.validStockSymbol(context, symbol);
+
+        }
+
+        @Override
+        protected void onPostExecute(Integer status) {
+
+            if (status == null) return;
+
+            String resultMessage = null;
+
+            if (status == StockUtils.STATUS_OK) {
+
+                resultMessage = getString(R.string.dialog_result_success);
+                PrefUtils.addStock(context, symbol);
+                QuoteSyncJob.syncImmediately(context);
+
+            } else if (status == StockUtils.STATUS_DUPLICATE_EXISTS) {
+
+                resultMessage = getString(R.string.dialog_result_duplicate_exists);
+
+            } else if (status == StockUtils.STATUS_STOCK_DOES_NOT_EXIST) {
+
+                resultMessage = getString(R.string.dialog_result_not_found);
+
+            }
+
+            swipeRefreshLayout.setRefreshing(false);
+            AddResultDialog.newInstance(resultMessage).show(getFragmentManager(), "ResultDialogFragment");
+
+        }
+
     }
 
 }

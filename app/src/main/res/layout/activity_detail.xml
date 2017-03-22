@@ -23,7 +23,8 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lc_stock_chart"
         android:layout_width="@dimen/line_chart_width"
-        android:layout_height="@dimen/line_chart_height">
+        android:layout_height="@dimen/line_chart_height"
+        >
     </com.github.mikephil.charting.charts.LineChart>
 
 </LinearLayout>
