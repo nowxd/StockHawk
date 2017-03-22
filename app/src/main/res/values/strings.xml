@@ -40,5 +40,6 @@
     <string name="dialog_result_duplicate_exists">Stock already added</string>
     <string name="dialog_result_not_found">Symbol not found</string>
 
+    <string name="widget_title">Mini Stock Hawk</string>
 
 </resources>

@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * Check if the user inputted stock is valid
      */
+    // TODO Potential Memory Leak
     class ValidStockTask extends AsyncTask<String, Void, Integer> {
 
         private Context context;
