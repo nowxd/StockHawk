@@ -34,7 +34,7 @@
         <provider
             android:name=".data.StockProvider"
             android:authorities="com.udacity.stockhawk"
-            android:exported="false" />
+            android:exported="true" />
 
         <service
             android:name=".sync.QuoteJobService"
@@ -48,6 +48,7 @@
             >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.udacity.stockhawk.WIDGET_DATA_CHANGED"/>
             </intent-filter>
 
             <meta-data

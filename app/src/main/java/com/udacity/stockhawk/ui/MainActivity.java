@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView error;
     private StockAdapter adapter;
 
+    private ValidStockTask stockTask;
+
     @Override
     public void onClick(String symbol) {
 
@@ -131,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (networkUp()) {
                 swipeRefreshLayout.setRefreshing(true);
             } else {
+                // TODO Symbol isn't added anymore, change this
                 String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }

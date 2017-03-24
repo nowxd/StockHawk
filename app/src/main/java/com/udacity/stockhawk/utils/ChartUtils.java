@@ -7,14 +7,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.udacity.stockhawk.model.HistoryData;
+import com.udacity.stockhawk.ui.CurrencyAxisValueFormatter;
 import com.udacity.stockhawk.ui.DateAxisValueFormatter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 public class ChartUtils {
@@ -30,8 +28,9 @@ public class ChartUtils {
         LineData lineData = new LineData(dataSet);
         stockChart.setData(lineData);
 
-        String[] dates = parseDates(dataList);
-        stockChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(dates));
+        stockChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(dataList));
+        stockChart.getAxisLeft().setValueFormatter(new CurrencyAxisValueFormatter());
+        stockChart.getAxisRight().setValueFormatter(new CurrencyAxisValueFormatter());
 
         editChartDesign(stockChart);
 
@@ -61,28 +60,6 @@ public class ChartUtils {
 
     }
 
-    /**
-     * Converts the timeInMS to a date string that will be displayed in the chart
-     */
-    private static String[] parseDates(List<HistoryData> dataList) {
-
-        int len = dataList.size();
-        String[] dates = new String[len];
-
-        Calendar calendar = Calendar.getInstance();
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy", Locale.US);
-
-        for (int index = 0; index < len; index++) {
-
-            calendar.setTimeInMillis(dataList.get(index).getTimeInMS());
-            dates[index] = dateFormat.format(calendar.getTime());
-
-        }
-
-        return dates;
-
-    }
 
     private static List<Entry> parseEntryData(List<HistoryData> dataList) {
 
@@ -110,6 +87,8 @@ public class ChartUtils {
         stockChart.getXAxis().setTextColor(Color.WHITE);
         stockChart.getAxisLeft().setTextColor(Color.WHITE);
         stockChart.getAxisRight().setTextColor(Color.WHITE);
+
+        stockChart.setExtraRightOffset(20);
 
         // Legend
         stockChart.getLegend().setTextColor(Color.WHITE);

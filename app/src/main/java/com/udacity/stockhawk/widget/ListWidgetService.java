@@ -3,6 +3,7 @@ package com.udacity.stockhawk.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -12,6 +13,8 @@ import com.udacity.stockhawk.data.Contract;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import timber.log.Timber;
 
 public class ListWidgetService extends RemoteViewsService {
 
@@ -27,7 +30,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Cursor cursor;
     private Context context;
 
-    DecimalFormat percentageFormat;
+    private DecimalFormat percentageFormat;
 
     ListRemoteViewsFactory(Context context) {
         this.context = context;
@@ -36,15 +39,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public void onCreate() {
 
-        String[] projection = Contract.Quote.QUOTE_COLUMNS.toArray(new String[Contract.Quote.QUOTE_COLUMNS.size()]);
-
-        // Get the Cursor
-        cursor = context.getContentResolver().query(
-                Contract.Quote.URI,
-                Contract.Quote.QUOTE_COLUMNS.toArray(new String[Contract.Quote.QUOTE_COLUMNS.size()]),
-                null,
-                null,
-                Contract.Quote.COLUMN_SYMBOL);
+        this.cursor = queryCursor();
 
         percentageFormat = (DecimalFormat) NumberFormat.getPercentInstance(Locale.getDefault());
         percentageFormat.setMaximumFractionDigits(2);
@@ -55,7 +50,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
-
+        this.cursor = queryCursor();
     }
 
     @Override
@@ -77,7 +72,8 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.list_item_quote);
 
         // Symbol
-        remoteViews.setTextViewText(R.id.symbol, cursor.getString(Contract.Quote.POSITION_SYMBOL));
+        String symbol = cursor.getString(Contract.Quote.POSITION_SYMBOL);
+        remoteViews.setTextViewText(R.id.symbol, symbol);
 
         // Change Color
         float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
@@ -91,6 +87,15 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // Percent
         float percentageChange = cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
         remoteViews.setTextViewText(R.id.change, percentageFormat.format(percentageChange / 100));
+
+        // On Click
+        Bundle bundle = new Bundle();
+        bundle.putString(StockWidgetProvider.EXTRA_STOCK_SYMBOL, symbol);
+
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtras(bundle);
+
+        remoteViews.setOnClickFillInIntent(R.id.symbol, fillInIntent);
 
         return remoteViews;
 
@@ -115,6 +120,19 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public boolean hasStableIds() {
         return false;
+    }
+
+    private Cursor queryCursor() {
+
+        String[] projection = Contract.Quote.QUOTE_COLUMNS.toArray(new String[Contract.Quote.QUOTE_COLUMNS.size()]);
+
+        return context.getContentResolver().query(
+                Contract.Quote.URI,
+                projection,
+                null,
+                null,
+                Contract.Quote.COLUMN_SYMBOL);
+
     }
 
 }

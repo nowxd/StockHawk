@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.udacity.stockhawk.widget.StockWidgetProvider;
+
 
 public class StockProvider extends ContentProvider {
 
@@ -104,6 +106,7 @@ public class StockProvider extends ContentProvider {
         Context context = getContext();
         if (context != null){
             context.getContentResolver().notifyChange(uri, null);
+            StockWidgetProvider.notifyWidgetDataChanged(context);
         }
 
         return returnUri;
@@ -143,6 +146,7 @@ public class StockProvider extends ContentProvider {
             Context context = getContext();
             if (context != null){
                 context.getContentResolver().notifyChange(uri, null);
+                StockWidgetProvider.notifyWidgetDataChanged(context);
             }
         }
 
@@ -185,7 +189,6 @@ public class StockProvider extends ContentProvider {
             default:
                 return super.bulkInsert(uri, values);
         }
-
 
     }
 }

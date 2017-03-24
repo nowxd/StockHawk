@@ -1,15 +1,70 @@
 package com.udacity.stockhawk.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
 import com.udacity.stockhawk.R;
+import com.udacity.stockhawk.ui.StockDetailActivity;
+
+import timber.log.Timber;
 
 public class StockWidgetProvider extends AppWidgetProvider {
+
+    public static final String CLICK_ACTION = "com.udacity.stockhawk.listwidget.CLICK_ACTION";
+    public static final String WIDGET_DATA_CHANGED = "com.udacity.stockhawk.WIDGET_DATA_CHANGED";
+    public static final String EXTRA_STOCK_SYMBOL = "symbol_key";
+
+    public static void notifyWidgetDataChanged(Context context) {
+
+//        Intent dataChanged = new Intent(WIDGET_DATA_CHANGED);
+//        context.sendBroadcast(dataChanged);
+
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+
+        ComponentName componentName = new ComponentName(context, StockWidgetProvider.class);
+        int[] appWidgetIds = widgetManager.getAppWidgetIds(componentName);
+
+        widgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_widget);
+
+    }
+
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+        if (intent.getAction().equals(CLICK_ACTION)) {
+
+            String symbol = intent.getStringExtra(EXTRA_STOCK_SYMBOL);
+
+            Intent displayStockDetailActivity = new Intent(context, StockDetailActivity.class);
+            displayStockDetailActivity.putExtra(EXTRA_STOCK_SYMBOL, symbol);
+
+            context.startActivity(displayStockDetailActivity);
+
+        }
+//        else if (intent.getAction().equals(WIDGET_DATA_CHANGED)) {
+//
+//            AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+//
+//            ComponentName componentName = new ComponentName(context, StockWidgetProvider.class);
+//            int[] appWidgetIds = widgetManager.getAppWidgetIds(componentName);
+//
+//            widgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_widget);
+//
+//        }
+//
+//        Timber.d("WIDGET Intent Action: " + intent.getAction());
+
+        super.onReceive(context, intent);
+
+    }
+
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -23,6 +78,15 @@ public class StockWidgetProvider extends AppWidgetProvider {
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.list_view_widget);
             remoteViews.setRemoteAdapter(R.id.lv_widget, intent);
+
+            // Sets up the individual list item's pending intent
+            Intent displayStockDetailIntent = new Intent(context, StockWidgetProvider.class);
+            displayStockDetailIntent.setAction(StockWidgetProvider.CLICK_ACTION);
+
+            PendingIntent detailPendingIntent = PendingIntent.getBroadcast(context, 0,
+                    displayStockDetailIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            remoteViews.setPendingIntentTemplate(R.id.lv_widget, detailPendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
 
