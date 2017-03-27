@@ -38,7 +38,7 @@
                 android:id="@+id/lc_stock_chart"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/line_chart_height"
-                android:contentDescription=""
+                android:contentDescription="@string/cd_chart"
                 />
 
         </FrameLayout>

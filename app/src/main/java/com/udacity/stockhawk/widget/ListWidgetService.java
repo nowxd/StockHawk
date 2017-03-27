@@ -95,7 +95,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(bundle);
 
-        remoteViews.setOnClickFillInIntent(R.id.symbol, fillInIntent);
+        remoteViews.setOnClickFillInIntent(R.id.ll_stock_list_item, fillInIntent);
 
         return remoteViews;
 

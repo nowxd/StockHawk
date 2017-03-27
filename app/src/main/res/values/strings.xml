@@ -35,12 +35,19 @@
     <string name="intent_extra_symbol_key" translatable="false">symbol_key</string>
     <string name="add_result_message_bundle_key" translatable="false">result_message_key</string>
 
+    <string name="widget_title">Mini Stock Hawk</string>
+    <string name="no_chart_data_available">No Chart Data Available</string>
+
     <string name="dialog_message_success">Stock successfully added</string>
     <string name="dialog_message_duplicate_exists">Stock already added</string>
     <string name="dialog_message_symbol_not_found">Symbol not found</string>
     <string name="dialog_message_network_error">Network error. Please try again when you have a stable internet connection.</string>
 
-    <string name="widget_title">Mini Stock Hawk</string>
-    <string name="no_chart_data_available">No Chart Data Available</string>
+    <!-- Content Description -->
+    <string name="cd_chart">Chart showing stock prices over time</string>
+    <string name="cd_fab_add_stock">Button to add a new stock</string>
+    <!--<string name="cd_dialog_add_stock_button">Add the stock</string>-->
+    <!--<string name="cd_dialog_cancel_button">Cancel adding a stock</string>-->
+    <!--<string name="cd_percent_currency_toggle">Button that toggles between currency and percent change</string>-->
 
 </resources>

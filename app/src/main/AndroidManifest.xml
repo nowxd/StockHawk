@@ -44,7 +44,7 @@
 
         <receiver
             android:name=".widget.StockWidgetProvider"
-            android:label="Mini Stock Hawk">
+            android:label="@string/widget_title">
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -59,7 +59,6 @@
         <service
             android:name=".widget.ListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
-
     </application>
 
 </manifest>
