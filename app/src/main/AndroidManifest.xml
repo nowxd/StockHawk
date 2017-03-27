@@ -44,8 +44,8 @@
 
         <receiver
             android:name=".widget.StockWidgetProvider"
-            android:label="PlaceHolder"
-            >
+            android:label="Mini Stock Hawk">
+
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
                 <action android:name="com.udacity.stockhawk.WIDGET_DATA_CHANGED"/>
