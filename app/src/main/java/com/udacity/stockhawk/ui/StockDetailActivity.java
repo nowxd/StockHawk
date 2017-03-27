@@ -8,6 +8,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -21,8 +23,9 @@ import timber.log.Timber;
 
 public class StockDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    @BindView(R.id.tv_stock_name) TextView stockNameTextView;
+    @BindView(R.id.tv_stock_symbol) TextView stockNameTextView;
     @BindView(R.id.lc_stock_chart) LineChart stockChart;
+    @BindView(R.id.tv_no_chart_data_message) TextView noDataTextView;
 
     private final int LOADER_ID = 0;
     private String stockSymbol;
@@ -57,18 +60,22 @@ public class StockDetailActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        int resultCount = data.getCount();
-        Timber.d("Number of results: " + resultCount);
+        if (data == null || data.getCount() == 0) return;
 
         data.moveToFirst();
-
-        Timber.d("STOCK SYMBOL: " + data.getString(Contract.Quote.POSITION_SYMBOL));
-        Timber.d("STOCK PRICE: " + data.getDouble(Contract.Quote.POSITION_PRICE));
 
         String historyString = data.getString(Contract.Quote.POSITION_HISTORY);
 
         stockNameTextView.setText(data.getString(Contract.Quote.POSITION_SYMBOL));
-        setupChart(historyString);
+
+        if (!historyString.isEmpty()) {
+            noDataTextView.setVisibility(View.INVISIBLE);
+            stockChart.setVisibility(View.VISIBLE);
+            setupChart(historyString);
+        } else {
+            stockChart.setVisibility(View.INVISIBLE);
+            noDataTextView.setVisibility(View.VISIBLE);
+        }
 
     }
 

@@ -32,14 +32,17 @@
     <string name="toast_no_connectivity">Will refresh when network available.</string>
 
     <!--My Strings-->
-    <string name="intent_extra_symbol_key" translatable="false">symbol_key</string>
 
+    <!--Bundle / Intent keys-->
+    <string name="intent_extra_symbol_key" translatable="false">symbol_key</string>
     <string name="add_result_message_bundle_key" translatable="false">result_message_key</string>
 
-    <string name="dialog_result_success">Stock successfully added</string>
-    <string name="dialog_result_duplicate_exists">Stock already added</string>
-    <string name="dialog_result_not_found">Symbol not found</string>
+    <string name="dialog_message_success">Stock successfully added</string>
+    <string name="dialog_message_duplicate_exists">Stock already added</string>
+    <string name="dialog_message_symbol_not_found">Symbol not found</string>
+    <string name="dialog_message_network_error">Network error. Please try again when you have a stable internet connection.</string>
 
     <string name="widget_title">Mini Stock Hawk</string>
+    <string name="no_chart_data_available">No Chart Data Available</string>
 
 </resources>

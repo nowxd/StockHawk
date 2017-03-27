@@ -12,10 +12,9 @@ public class AddResultDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         String message = getArguments().getString(MESSAGE_KEY);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(message).setPositiveButton("Ok", null);
 
         return builder.create();

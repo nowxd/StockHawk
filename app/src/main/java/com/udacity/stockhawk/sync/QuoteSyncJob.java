@@ -83,20 +83,26 @@ public final class QuoteSyncJob {
                 float change = quote.getChange().floatValue();
                 float percentChange = quote.getChangeInPercent().floatValue();
 
-                // WARNING! Don't request historical data for a stock that doesn't exist!
-                // The request will hang forever
-                List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
-
                 StringBuilder historyBuilder = new StringBuilder();
 
-                for (HistoricalQuote it : history) {
-                    historyBuilder.append(it.getDate().getTimeInMillis());
-                    historyBuilder.append(", ");
-                    historyBuilder.append(it.getClose());
-                    historyBuilder.append("\n");
+                try {
+
+                    // WARNING! Don't request historical data for a stock that doesn't exist!
+                    // The request will hang forever
+                    List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
+
+                    for (HistoricalQuote it : history) {
+                        historyBuilder.append(it.getDate().getTimeInMillis());
+                        historyBuilder.append(", ");
+                        historyBuilder.append(it.getClose());
+                        historyBuilder.append("\n");
+                    }
+
+                } catch (IOException e) {
+                    Timber.e(e, "Error fetching historical data");
                 }
 
-                Timber.d(historyBuilder.toString());
+//                Timber.d(historyBuilder.toString());
 
                 ContentValues quoteCV = new ContentValues();
                 quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);

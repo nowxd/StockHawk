@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import timber.log.Timber;
+
 public final class PrefUtils {
 
     private PrefUtils() {
@@ -41,9 +43,9 @@ public final class PrefUtils {
         Set<String> stocks = getStocks(context);
 
         if (add) {
-            stocks.add(symbol);
+            stocks.add(symbol.toUpperCase());
         } else {
-            stocks.remove(symbol);
+            stocks.remove(symbol.toUpperCase());
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

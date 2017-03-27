@@ -88,8 +88,6 @@ public class ChartUtils {
         stockChart.getAxisLeft().setTextColor(Color.WHITE);
         stockChart.getAxisRight().setTextColor(Color.WHITE);
 
-        stockChart.setExtraRightOffset(20);
-
         // Legend
         stockChart.getLegend().setTextColor(Color.WHITE);
 

@@ -16,21 +16,30 @@ public class StockUtils {
     public static final int STATUS_OK = 0;
     public static final int STATUS_DUPLICATE_EXISTS = 1;
     public static final int STATUS_STOCK_DOES_NOT_EXIST = 2;
+    public static final int STATUS_NETWORK_ERROR = 3;
 
     /**
      * Must be called asynchronously since there is a network call with YahooUtils
      */
     public static int validStockSymbol(Context context, String symbol) {
 
-        // Duplicate
+        // Already added
         boolean duplicateExists = PrefUtils.checkStockExistsPref(context, symbol);
-        if (duplicateExists) return STATUS_DUPLICATE_EXISTS;
 
-        // Exists on their end
-        boolean stockExists = YahooUtils.checkStockExistsYahoo(symbol);
-        if (!stockExists) return STATUS_STOCK_DOES_NOT_EXIST;
+        if (duplicateExists) {
+            return STATUS_DUPLICATE_EXISTS;
+        }
 
-        return STATUS_OK;
+        // Check if Yahoo can identify the symbol
+        int yahooStatus = YahooUtils.checkStockExistsYahoo(symbol);
+
+        if (yahooStatus == YahooUtils.STOCK_DOES_NOT_EXIST) {
+            return STATUS_STOCK_DOES_NOT_EXIST;
+        } else if (yahooStatus == YahooUtils.NETWORK_ERROR) {
+            return STATUS_NETWORK_ERROR;
+        } else {
+            return STATUS_OK;
+        }
 
     }
 

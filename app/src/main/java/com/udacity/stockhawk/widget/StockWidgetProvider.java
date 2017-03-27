@@ -34,7 +34,6 @@ public class StockWidgetProvider extends AppWidgetProvider {
 
     }
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
 

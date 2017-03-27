@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     TextView error;
     private StockAdapter adapter;
 
-    private ValidStockTask stockTask;
-
     @Override
     public void onClick(String symbol) {
 
@@ -132,11 +130,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             if (networkUp()) {
                 swipeRefreshLayout.setRefreshing(true);
-            } else {
-                // TODO Symbol isn't added anymore, change this
-                String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
+
+            // Only letting the user add if they're connected to the internet, so the app
+            // can provide feedback whether the stock exists or not
+//            else {
+//                String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
+//                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+//            }
 
             new ValidStockTask(this).execute(symbol);
 
@@ -203,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     /**
      * Check if the user inputted stock is valid
      */
-    // TODO Potential Memory Leak
     class ValidStockTask extends AsyncTask<String, Void, Integer> {
 
         private Context context;
@@ -233,17 +233,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             if (status == StockUtils.STATUS_OK) {
 
-                resultMessage = getString(R.string.dialog_result_success);
+                resultMessage = getString(R.string.dialog_message_success);
                 PrefUtils.addStock(context, symbol);
                 QuoteSyncJob.syncImmediately(context);
 
             } else if (status == StockUtils.STATUS_DUPLICATE_EXISTS) {
 
-                resultMessage = getString(R.string.dialog_result_duplicate_exists);
+                resultMessage = getString(R.string.dialog_message_duplicate_exists);
 
             } else if (status == StockUtils.STATUS_STOCK_DOES_NOT_EXIST) {
 
-                resultMessage = getString(R.string.dialog_result_not_found);
+                resultMessage = getString(R.string.dialog_message_symbol_not_found);
+
+            } else if (status == StockUtils.STATUS_NETWORK_ERROR) {
+
+                resultMessage = getString(R.string.dialog_message_network_error);
 
             }
 
