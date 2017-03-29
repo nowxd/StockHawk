@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 swipeRefreshLayout.setRefreshing(true);
             }
 
-            // Only letting the user add if they're connected to the internet, so the app
+            // Only letting users add if they're connected to the internet, so the app
             // can provide feedback whether the stock exists or not
 //            else {
 //                String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
@@ -163,13 +163,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         adapter.setCursor(data);
     }
 
-
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         swipeRefreshLayout.setRefreshing(false);
         adapter.setCursor(null);
     }
-
 
     private void setDisplayModeMenuItemIcon(MenuItem item) {
         if (PrefUtils.getDisplayMode(this)

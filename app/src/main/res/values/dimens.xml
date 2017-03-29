@@ -8,4 +8,8 @@
     <dimen name="large_text_size">32sp</dimen>
     <dimen name="detail_vertical_padding">16dp</dimen>
 
+    <dimen name="medium_text_size">22sp</dimen>
+
+    <dimen name="widget_min_width">180dp</dimen>
+    <dimen name="widget_min_height">120dp</dimen>
 </resources>

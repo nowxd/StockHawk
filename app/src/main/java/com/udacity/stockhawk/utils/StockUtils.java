@@ -10,9 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 
 public class StockUtils {
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({STATUS_OK, STATUS_DUPLICATE_EXISTS, STATUS_STOCK_DOES_NOT_EXIST})
-    public @interface StockStatus {}
     public static final int STATUS_OK = 0;
     public static final int STATUS_DUPLICATE_EXISTS = 1;
     public static final int STATUS_STOCK_DOES_NOT_EXIST = 2;

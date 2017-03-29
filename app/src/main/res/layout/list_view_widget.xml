@@ -6,10 +6,11 @@
     android:background="@color/widget_background">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/widget_title"
-        android:textSize="22sp"/>
+        android:textSize="@dimen/medium_text_size"
+        android:background="@color/widget_title_background"/>
 
     <ListView
         android:id="@+id/lv_widget"

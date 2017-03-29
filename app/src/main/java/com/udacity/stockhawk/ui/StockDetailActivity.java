@@ -9,7 +9,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -19,7 +18,6 @@ import com.udacity.stockhawk.utils.ChartUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class StockDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -85,7 +83,9 @@ public class StockDetailActivity extends AppCompatActivity implements LoaderMana
     }
 
     private void setupChart(String historyString) {
-        ChartUtils.setUpStockChart(stockChart, historyString);
+        // Check if the current configuration is RTL for the chart
+        boolean RTL = (getResources().getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
+        ChartUtils.setUpStockChart(stockChart, historyString, RTL);
     }
 
 }

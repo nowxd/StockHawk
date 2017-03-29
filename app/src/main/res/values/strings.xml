@@ -45,9 +45,7 @@
 
     <!-- Content Description -->
     <string name="cd_chart">Chart showing stock prices over time</string>
-    <string name="cd_fab_add_stock">Button to add a new stock</string>
-    <!--<string name="cd_dialog_add_stock_button">Add the stock</string>-->
-    <!--<string name="cd_dialog_cancel_button">Cancel adding a stock</string>-->
-    <!--<string name="cd_percent_currency_toggle">Button that toggles between currency and percent change</string>-->
+    <string name="cd_fab_add_stock">Add a new stock</string>
+    <string name="cd_menu_item_change_title">Toggles between percent and price change button</string>
 
 </resources>

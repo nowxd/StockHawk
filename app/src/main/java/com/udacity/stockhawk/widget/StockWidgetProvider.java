@@ -17,13 +17,9 @@ import timber.log.Timber;
 public class StockWidgetProvider extends AppWidgetProvider {
 
     public static final String CLICK_ACTION = "com.udacity.stockhawk.listwidget.CLICK_ACTION";
-    public static final String WIDGET_DATA_CHANGED = "com.udacity.stockhawk.WIDGET_DATA_CHANGED";
     public static final String EXTRA_STOCK_SYMBOL = "symbol_key";
 
     public static void notifyWidgetDataChanged(Context context) {
-
-//        Intent dataChanged = new Intent(WIDGET_DATA_CHANGED);
-//        context.sendBroadcast(dataChanged);
 
         AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
 
@@ -43,22 +39,11 @@ public class StockWidgetProvider extends AppWidgetProvider {
 
             Intent displayStockDetailActivity = new Intent(context, StockDetailActivity.class);
             displayStockDetailActivity.putExtra(EXTRA_STOCK_SYMBOL, symbol);
+            displayStockDetailActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             context.startActivity(displayStockDetailActivity);
-
+            
         }
-//        else if (intent.getAction().equals(WIDGET_DATA_CHANGED)) {
-//
-//            AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-//
-//            ComponentName componentName = new ComponentName(context, StockWidgetProvider.class);
-//            int[] appWidgetIds = widgetManager.getAppWidgetIds(componentName);
-//
-//            widgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lv_widget);
-//
-//        }
-//
-//        Timber.d("WIDGET Intent Action: " + intent.getAction());
 
         super.onReceive(context, intent);
 

@@ -8,6 +8,7 @@
     <color name="material_red_700">#D50000</color>
     <color name="material_green_700">#00C853</color>
 
-    <color name="widget_background">#e0e0e0</color>
+    <color name="widget_background">#505050</color>
+    <color name="widget_title_background">#414141</color>
 
 </resources>

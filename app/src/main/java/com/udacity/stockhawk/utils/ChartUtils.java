@@ -17,9 +17,9 @@ import java.util.StringTokenizer;
 
 public class ChartUtils {
 
-    public static void setUpStockChart(LineChart stockChart, String historyDataStr) {
+    public static void setUpStockChart(LineChart stockChart, String historyDataStr, boolean RTL) {
 
-        List<HistoryData> dataList = parseHistoryData(historyDataStr);
+        List<HistoryData> dataList = parseHistoryData(historyDataStr, RTL);
         List<Entry> entries = ChartUtils.parseEntryData(dataList);
 
         LineDataSet dataSet = new LineDataSet(entries, "Stock Price");
@@ -38,7 +38,7 @@ public class ChartUtils {
 
     }
 
-    private static List<HistoryData> parseHistoryData(String historyDataStr) {
+    private static List<HistoryData> parseHistoryData(String historyDataStr, boolean RTL) {
 
         StringTokenizer stringTokenizer = new StringTokenizer(historyDataStr, ",\n");
 
@@ -53,8 +53,9 @@ public class ChartUtils {
 
         }
 
-        // The data that is given is in reverse chronological order
-        Collections.reverse(dataList);
+        // The data is given in reverse chronological order
+        // This is fine for RTL, but we need to reverse this for LTR
+        if (!RTL) Collections.reverse(dataList);
 
         return dataList;
 
@@ -69,9 +70,7 @@ public class ChartUtils {
         int index = 0;
 
         for (HistoryData historyData : dataList) {
-
             entries.add(new Entry((float) (index++), (float) historyData.getStockPrice()));
-
         }
 
         return entries;

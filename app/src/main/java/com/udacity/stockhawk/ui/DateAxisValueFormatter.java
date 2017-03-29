@@ -27,7 +27,7 @@ public class DateAxisValueFormatter implements IAxisValueFormatter {
 
         Calendar calendar = Calendar.getInstance();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy", Locale.US);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-yy", Locale.US);
 
         for (int index = 0; index < len; index++) {
 
