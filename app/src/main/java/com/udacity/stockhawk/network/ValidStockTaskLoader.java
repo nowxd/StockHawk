@@ -20,7 +20,7 @@ public class ValidStockTaskLoader extends AsyncTaskLoader<Integer> {
     @Override
     public Integer loadInBackground() {
 
-        if (symbol == null || symbol.length() == 0) return null;
+        if (symbol == null || symbol.isEmpty()) return null;
 
         return StockUtils.validStockSymbol(getContext(), symbol);
 
