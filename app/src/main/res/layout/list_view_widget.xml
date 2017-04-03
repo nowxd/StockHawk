@@ -8,6 +8,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/stock_item_horizontal_margin"
+        android:paddingStart="@dimen/stock_item_horizontal_margin"
+        android:paddingRight="@dimen/stock_item_horizontal_margin"
+        android:paddingEnd="@dimen/stock_item_horizontal_margin"
         android:text="@string/widget_title"
         android:textSize="@dimen/medium_text_size"
         android:background="@color/widget_title_background"
