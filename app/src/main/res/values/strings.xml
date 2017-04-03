@@ -38,9 +38,9 @@
     <string name="widget_title">Mini Stock Hawk</string>
     <string name="no_chart_data_available">No Chart Data Available</string>
 
-    <string name="dialog_message_success">Stock successfully added</string>
-    <string name="dialog_message_duplicate_exists">Stock already added</string>
-    <string name="dialog_message_symbol_not_found">Symbol not found</string>
+    <string name="dialog_message_success">Stock successfully added.</string>
+    <string name="dialog_message_duplicate_exists">Stock already added.</string>
+    <string name="dialog_message_symbol_not_found">Symbol not found.</string>
     <string name="dialog_message_network_error">Network error. Please try again when you have a stable internet connection.</string>
 
     <!-- Content Description -->
