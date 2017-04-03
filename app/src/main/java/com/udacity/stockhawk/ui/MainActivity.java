@@ -184,17 +184,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
-    void addStock(final String symbol) {
+    void addStock(String symbol) {
 
         if (symbol == null || symbol.isEmpty()) return;
 
         if (validStockLoaderCallbacks == null) {
 
             validStockLoaderCallbacks = new LoaderManager.LoaderCallbacks<Integer>() {
+
+                private String symbol;
+
                 @Override
                 public Loader<Integer> onCreateLoader(int id, Bundle args) {
 
                     swipeRefreshLayout.setRefreshing(true);
+
+                    this.symbol = args.getString(getString(R.string.intent_extra_symbol_key));
 
                     ValidStockTaskLoader loader = new ValidStockTaskLoader(symbol, getApplicationContext());
                     loader.forceLoad();
@@ -246,7 +251,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         }
 
-        getSupportLoaderManager().restartLoader(VALID_STOCK_CHECKER_LOADER_ID, null, validStockLoaderCallbacks);
+        Bundle bundle = new Bundle();
+        bundle.putString(getString(R.string.intent_extra_symbol_key), symbol);
+
+        getSupportLoaderManager().restartLoader(VALID_STOCK_CHECKER_LOADER_ID, bundle, validStockLoaderCallbacks);
 
     }
 

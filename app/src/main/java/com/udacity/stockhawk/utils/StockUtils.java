@@ -8,6 +8,8 @@ import com.udacity.stockhawk.data.PrefUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import timber.log.Timber;
+
 public class StockUtils {
 
     public static final int STATUS_OK = 0;
