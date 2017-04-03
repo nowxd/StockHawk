@@ -34,9 +34,11 @@ public class StockUtils {
             return STATUS_STOCK_DOES_NOT_EXIST;
         } else if (yahooStatus == YahooUtils.NETWORK_ERROR) {
             return STATUS_NETWORK_ERROR;
-        } else {
+        } else if (yahooStatus == YahooUtils.STOCK_EXISTS) {
             return STATUS_OK;
         }
+
+        throw new UnsupportedOperationException("Invalid Status");
 
     }
 

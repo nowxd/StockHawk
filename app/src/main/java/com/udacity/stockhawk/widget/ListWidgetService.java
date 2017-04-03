@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -74,6 +75,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // Symbol
         String symbol = cursor.getString(Contract.Quote.POSITION_SYMBOL);
         remoteViews.setTextViewText(R.id.symbol, symbol);
+        remoteViews.setTextColor(R.id.symbol, ContextCompat.getColor(context, R.color.widget_text_color));
 
         // Change Color
         float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);

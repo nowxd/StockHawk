@@ -2,21 +2,17 @@ package com.udacity.stockhawk.sync;
 
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
-import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.IntDef;
 
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -101,8 +97,6 @@ public final class QuoteSyncJob {
                 } catch (IOException e) {
                     Timber.e(e, "Error fetching historical data");
                 }
-
-//                Timber.d(historyBuilder.toString());
 
                 ContentValues quoteCV = new ContentValues();
                 quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);

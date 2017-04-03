@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -24,6 +23,7 @@ import android.widget.Toast;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
+import com.udacity.stockhawk.network.ValidStockTaskLoader;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
 import com.udacity.stockhawk.utils.StockUtils;
 
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SwipeRefreshLayout.OnRefreshListener,
         StockAdapter.StockAdapterOnClickHandler {
 
-    private static final int STOCK_LOADER = 0;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
     RecyclerView stockRecyclerView;
@@ -46,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @BindView(R.id.error)
     TextView error;
     private StockAdapter adapter;
+
+    private static final int STOCK_LOADER = 0;
+    private static final int VALID_STOCK_CHECKER_LOADER_ID = 1;
+
+    private LoaderManager.LoaderCallbacks<Integer> validStockLoaderCallbacks;
 
     @Override
     public void onClick(String symbol) {
@@ -125,25 +129,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         new AddStockDialog().show(getFragmentManager(), "StockDialogFragment");
     }
 
-    void addStock(String symbol) {
-        if (symbol != null && !symbol.isEmpty()) {
-
-            if (networkUp()) {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-
-            // Only letting users add if they're connected to the internet, so the app
-            // can provide feedback whether the stock exists or not
-//            else {
-//                String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
-//                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-//            }
-
-            new ValidStockTask(this).execute(symbol);
-
-        }
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(this,
@@ -199,60 +184,69 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Check if the user inputted stock is valid
-     */
-    class ValidStockTask extends AsyncTask<String, Void, Integer> {
+    void addStock(final String symbol) {
 
-        private Context context;
-        private String symbol;
+        if (symbol == null || symbol.isEmpty()) return;
 
-        ValidStockTask(Context context) {
-            this.context = context;
+        if (validStockLoaderCallbacks == null) {
+
+            validStockLoaderCallbacks = new LoaderManager.LoaderCallbacks<Integer>() {
+                @Override
+                public Loader<Integer> onCreateLoader(int id, Bundle args) {
+
+                    swipeRefreshLayout.setRefreshing(true);
+
+                    ValidStockTaskLoader loader = new ValidStockTaskLoader(symbol, getApplicationContext());
+                    loader.forceLoad();
+
+                    return loader;
+
+                }
+
+                /**
+                 * Show a dialog popup that displays whether the stock was successfully added or not
+                 */
+                @Override
+                public void onLoadFinished(Loader<Integer> loader, Integer status) {
+
+                    if (status == null) return;
+
+                    String resultMessage = null;
+
+                    if (status == StockUtils.STATUS_OK) {
+
+                        resultMessage = getString(R.string.dialog_message_success);
+                        PrefUtils.addStock(getApplicationContext(), symbol);
+                        QuoteSyncJob.syncImmediately(getApplicationContext());
+
+                    } else if (status == StockUtils.STATUS_DUPLICATE_EXISTS) {
+
+                        resultMessage = getString(R.string.dialog_message_duplicate_exists);
+
+                    } else if (status == StockUtils.STATUS_STOCK_DOES_NOT_EXIST) {
+
+                        resultMessage = getString(R.string.dialog_message_symbol_not_found);
+
+                    } else if (status == StockUtils.STATUS_NETWORK_ERROR) {
+
+                        resultMessage = getString(R.string.dialog_message_network_error);
+
+                    }
+
+                    swipeRefreshLayout.setRefreshing(false);
+                    AddResultDialog.newInstance(resultMessage).show(getFragmentManager(), "ResultDialogFragment");
+
+                }
+
+                @Override
+                public void onLoaderReset(Loader<Integer> loader) {
+
+                }
+            };
+
         }
 
-        @Override
-        protected Integer doInBackground(String... strings) {
-
-            if (strings.length == 0 || strings[0] == null) return null;
-
-            this.symbol = strings[0];
-
-            return StockUtils.validStockSymbol(context, symbol);
-
-        }
-
-        @Override
-        protected void onPostExecute(Integer status) {
-
-            if (status == null) return;
-
-            String resultMessage = null;
-
-            if (status == StockUtils.STATUS_OK) {
-
-                resultMessage = getString(R.string.dialog_message_success);
-                PrefUtils.addStock(context, symbol);
-                QuoteSyncJob.syncImmediately(context);
-
-            } else if (status == StockUtils.STATUS_DUPLICATE_EXISTS) {
-
-                resultMessage = getString(R.string.dialog_message_duplicate_exists);
-
-            } else if (status == StockUtils.STATUS_STOCK_DOES_NOT_EXIST) {
-
-                resultMessage = getString(R.string.dialog_message_symbol_not_found);
-
-            } else if (status == StockUtils.STATUS_NETWORK_ERROR) {
-
-                resultMessage = getString(R.string.dialog_message_network_error);
-
-            }
-
-            swipeRefreshLayout.setRefreshing(false);
-            AddResultDialog.newInstance(resultMessage).show(getFragmentManager(), "ResultDialogFragment");
-
-        }
+        getSupportLoaderManager().restartLoader(VALID_STOCK_CHECKER_LOADER_ID, null, validStockLoaderCallbacks);
 
     }
 

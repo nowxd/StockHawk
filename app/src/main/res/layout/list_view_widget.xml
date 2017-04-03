@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:text="@string/widget_title"
         android:textSize="@dimen/medium_text_size"
-        android:background="@color/widget_title_background"/>
+        android:background="@color/widget_title_background"
+        android:textColor="@color/widget_text_color"/>
 
     <ListView
         android:id="@+id/lv_widget"
