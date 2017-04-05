@@ -41,7 +41,7 @@ class YahooUtils {
 
     private static boolean checkSymbolIsValid(String symbol) {
 
-        // The input string must only contain unicode letters
+        // The input string must only contain letters from the roman alphabet
         final String regex = "[a-zA-Z]+";
 
         return symbol.matches(regex);
